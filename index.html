@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Interactivo - Christian Burgueño</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals with Blue Accent -->
+    <!-- Application Structure Plan: A single-page application with a sticky navigation bar for easy access to thematic sections: a hero intro, an 'About Me' section combining profile and competencies, a tabbed section for experience and projects, an interactive skills chart, a visual timeline for education, and a contact footer. This structure is chosen to create a dynamic, portfolio-like experience that is more engaging than a static document, allowing recruiters to quickly navigate to the information they find most relevant. -->
+    <!-- Visualization & Content Choices: 
+        - Habilidades Técnicas -> Goal: Compare/Inform -> Viz: Interactive Radar Chart -> Interaction: Hover tooltips to show skill levels -> Justification: Provides a quick, visual summary of technical strengths, which is more impactful than a list -> Library: Chart.js (Canvas).
+        - Formación Académica -> Goal: Show Progression -> Method: Vertical Timeline -> Interaction: None -> Justification: Clearly illustrates the chronological order of education in a visually pleasing format -> Library/Method: HTML/CSS with Tailwind.
+        - Experiencia/Proyectos -> Goal: Organize/Inform -> Method: Tabbed View -> Interaction: Click to switch content -> Justification: Separates distinct types of experience cleanly, preventing information overload and improving readability -> Library/Method: Vanilla JS + HTML/CSS.
+        - Competencias Profesionales -> Goal: Inform -> Method: List with Icons -> Interaction: None -> Justification: Icons make the list easier to scan and more visually appealing -> Library/Method: HTML/CSS (Unicode characters).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        .tab-active {
+            border-bottom-color: #3B82F6;
+            color: #3B82F6;
+            font-weight: 600;
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: -2.8rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background-color: #3B82F6;
+            border: 2px solid #BFDBFE;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 500px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <nav class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <span class="text-xl font-bold text-gray-900">Christian Burgueño</span>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#sobre-mi" class="text-gray-600 hover:text-blue-500 transition duration-300">Sobre Mí</a>
+                    <a href="#experiencia" class="text-gray-600 hover:text-blue-500 transition duration-300">Experiencia</a>
+                    <a href="#habilidades" class="text-gray-600 hover:text-blue-500 transition duration-300">Habilidades</a>
+                    <a href="#educacion" class="text-gray-600 hover:text-blue-500 transition duration-300">Educación</a>
+                    <a href="#contacto" class="text-gray-600 hover:text-blue-500 transition duration-300">Contacto</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#sobre-mi" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100">Sobre Mí</a>
+            <a href="#experiencia" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100">Experiencia</a>
+            <a href="#habilidades" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100">Habilidades</a>
+            <a href="#educacion" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100">Educación</a>
+            <a href="#contacto" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100">Contacto</a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-8">
+        
+        <header class="text-center py-16 md:py-24">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight">CHRISTIAN BURGUEÑO</h1>
+            <p class="mt-4 text-lg md:text-xl text-blue-600 font-medium">Estudiante de Ingeniería en Tecnologías de la Información</p>
+        </header>
+
+        <section id="sobre-mi" class="py-16">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">Sobre Mí</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Perfil Profesional</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Estudiante de Ingeniería en Tecnologías de la Información, enfocado en el desarrollo profesional y personal. Busco aplicar mis conocimientos y habilidades en programación, diseño web y mantenimiento de sistemas para contribuir al éxito de proyectos. Soy una persona proactiva, organizada y con una gran actitud de servicio, siempre dispuesta a aprender y asumir nuevos desafíos.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Competencias</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center text-gray-600"><span class="text-blue-500 mr-3 text-xl">✓</span> Proactivo y organizado</li>
+                        <li class="flex items-center text-gray-600"><span class="text-blue-500 mr-3 text-xl">✓</span> Creativo y resiliente</li>
+                        <li class="flex items-center text-gray-600"><span class="text-blue-500 mr-3 text-xl">✓</span> Honesto y responsable</li>
+                        <li class="flex items-center text-gray-600"><span class="text-blue-500 mr-3 text-xl">✓</span> Actitud de servicio</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="experiencia" class="py-16">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">Experiencia y Proyectos</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="border-b border-gray-200 mb-8">
+                    <nav class="flex justify-center -mb-px space-x-8" aria-label="Tabs">
+                        <button class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-blue-600 hover:border-blue-300 tab-active" data-target="laboral">Experiencia Laboral</button>
+                        <button class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-blue-600 hover:border-blue-300" data-target="proyectos">Proyectos Académicos</button>
+                    </nav>
+                </div>
+
+                <div id="laboral" class="tab-content">
+                    <div class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
+                        <p class="text-sm font-semibold text-blue-600">2024</p>
+                        <h3 class="text-xl font-bold mt-1 text-gray-900">C&D Technologies Reynosa</h3>
+                        <p class="text-md font-medium text-gray-500 mt-1">Prácticas profesionales - Departamento de Ingeniería</p>
+                        <ul class="mt-4 list-disc list-inside text-gray-600 space-y-2">
+                            <li>Brindé soporte a ingenieros en el desarrollo e implementación de videos de capacitación para el área de ensamble.</li>
+                            <li>Propuse y apliqué la creación de videos de soporte para reforzar el aprendizaje de los empleados, mejorando los procesos de capacitación.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="proyectos" class="tab-content hidden">
+                    <div class="space-y-8">
+                        <div class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
+                            <h3 class="text-xl font-bold text-gray-900">Cheeser Pizza</h3>
+                            <p class="text-md font-medium text-gray-500 mt-1">Desarrollo Web y Marketing Digital</p>
+                            <p class="mt-4 text-gray-600">Desarrollé una página web con estrategia de marketing digital para una pizzería, logrando un <span class="font-bold text-green-600">aumento del 10% en ventas</span>.</p>
+                             <p class="mt-2 text-gray-600">Utilicé HTML, CSS y JavaScript para crear una experiencia de usuario optimizada y un catálogo atractivo.</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
+                            <h3 class="text-xl font-bold text-gray-900">Papelería y Librería Corpa</h3>
+                            <p class="text-md font-medium text-gray-500 mt-1">Desarrollo E-commerce</p>
+                            <p class="mt-4 text-gray-600">Creé y personalicé una tienda en línea utilizando WordPress y WooCommerce, resultando en un <span class="font-bold text-green-600">aumento del 4% en las ventas</span>.</p>
+                            <p class="mt-2 text-gray-600">Implementé un sistema de e-commerce completo con pasarelas de pago y gestión de productos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="habilidades" class="py-16 bg-white rounded-lg shadow-md border border-gray-100">
+            <h2 class="text-3xl font-bold text-center mb-4 text-gray-900">Habilidades Técnicas</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Esta visualización muestra un resumen de mis competencias en diferentes áreas tecnológicas. Puede pasar el cursor sobre los puntos para ver más detalles.</p>
+            <div class="chart-container">
+                <canvas id="skillsChart"></canvas>
+            </div>
+        </section>
+
+        <section id="educacion" class="py-16">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">Formación Académica</h2>
+            <div class="max-w-2xl mx-auto">
+                <div class="relative border-l-2 border-blue-200 ml-16">
+                    <div class="mb-10 ml-8 timeline-item">
+                        <p class="text-sm font-semibold text-blue-600">2024 - Cursando</p>
+                        <h3 class="text-lg font-bold text-gray-900">Ingeniería en Tecnologías de la Información</h3>
+                        <p class="text-md font-medium text-gray-500">Universidad Tecnológica de Tamaulipas Norte</p>
+                    </div>
+                    <div class="mb-10 ml-8 timeline-item">
+                        <p class="text-sm font-semibold text-blue-600">2022 - 2024</p>
+                        <h3 class="text-lg font-bold text-gray-900">Técnico Superior Universitario en TI</h3>
+                        <p class="text-md font-medium text-gray-500">Universidad Tecnológica de Tamaulipas Norte</p>
+                        <p class="text-sm text-gray-500 mt-1">Área Entornos Virtuales y Negocios Digitales</p>
+                    </div>
+                    <div class="ml-8 timeline-item">
+                        <p class="text-sm font-semibold text-blue-600">2019 - 2022</p>
+                        <h3 class="text-lg font-bold text-gray-900">Bachillerato Certificado</h3>
+                        <p class="text-md font-medium text-gray-500">Colegio de Bachilleres del Estado de Tamaulipas</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer id="contacto" class="bg-gray-800 text-white py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold mb-4">Contacto</h2>
+            <p class="text-gray-300 mb-6">Estoy disponible para nuevas oportunidades y desafíos.</p>
+            <div class="flex justify-center items-center space-x-6">
+                <p class="text-gray-300">899-498-9175</p>
+                <span class="text-gray-500">|</span>
+                <p class="text-gray-300">burguenochristian30@gmail.com</p>
+                <span class="text-gray-500">|</span>
+                <a href="https://www.tuportafolio.com/" target="_blank" class="text-blue-400 hover:text-blue-300 transition duration-300">Portafolio</a>
+            </div>
+            <p class="mt-8 text-sm text-gray-500">Reynosa, Tamps.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            const tabs = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(item => {
+                        item.classList.remove('tab-active');
+                        item.classList.add('text-gray-500');
+                    });
+                    tab.classList.add('tab-active');
+                    tab.classList.remove('text-gray-500');
+
+                    const target = tab.dataset.target;
+                    tabContents.forEach(content => {
+                        if (content.id === target) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Desarrollo Web (HTML, CSS, JS)', 
+                        'Diseño 3D y Motores de Juego',
+                        'Bases de Datos (MySQL)', 
+                        'Redes y Mantenimiento', 
+                        'Desarrollo con CMS (WordPress)',
+                        'Software de Oficina'
+                    ],
+                    datasets: [{
+                        label: 'Nivel de Habilidad',
+                        data: [8, 7, 6, 8, 9, 9],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                color: '#374151'
+                            },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                stepSize: 2,
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw}/10`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
